@@ -7,7 +7,6 @@
 // Utiliziamo una classe first e last  per capire quali sono la prima e ultima immagine dello slider
 // Utilizziamo una classe active per aiutarci a capire quale è l’immagine attuale da visualizzare nello slider
 
-
 $(document).ready(function () {
 	// Tutto il codice qui dentro viene eseguito solamente
 	// quando il DOM è stato
@@ -19,6 +18,8 @@ $(document).ready(function () {
 	// evento quando premo l'immagine prev (freccia sx dell'immagine)
 	$('.prev').click(clickPrev);
 });
+
+
 
 // funzione eseguita per girare immagini verso dx
 function clickNext () {
@@ -50,3 +51,35 @@ function clickPrev () {
 
 	nextImg.addClass('active');
 }
+
+// freccia dx e sx
+
+$(document).keyup(function (e) {
+	if (e.keyCode === 37) {			// left
+		var imgActive = $('img.active');
+		imgActive.removeClass('active');
+		if (imgActive.hasClass('last') === true) {
+			var nextImg = $('img.first');
+		}	else {
+			nextImg = imgActive.next();
+		}
+		nextImg.addClass('active');
+	}
+}
+);
+
+$(document).keyup(function (e) {
+	if (e.keyCode === 39) {			// right
+		var imgActive = $('img.active');
+		imgActive.removeClass('active');
+
+		if (imgActive.hasClass('first')) {
+			var nextImg = $('img.last');
+		}	else {
+			nextImg = imgActive.prev();
+		}
+
+		nextImg.addClass('active');
+	}
+}
+);
