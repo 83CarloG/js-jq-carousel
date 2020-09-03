@@ -7,79 +7,74 @@
 // Utiliziamo una classe first e last  per capire quali sono la prima e ultima immagine dello slider
 // Utilizziamo una classe active per aiutarci a capire quale è l’immagine attuale da visualizzare nello slider
 
-$(document).ready(function () {
-	// Tutto il codice qui dentro viene eseguito solamente
-	// quando il DOM è stato
-	// caricato completamente, a prescindere da dove sia
-	// posizionato nella pagina
+$(document).ready(function ()	{
 
-	// evento quando premo l'immagine next (freccia dx dell'immagine)
-	$('.next').click(clickNext);
-	// evento quando premo l'immagine prev (freccia sx dell'immagine)
-	$('.prev').click(clickPrev);
+	$('.next').click(nextImg);
+	//	Faccio l'inverso per prev
+	$('.prev').click(prevImg);
+
+	$('.nav i').click(
+		function () {
+			var circleIndex = $(this).index();
+			// rimuovo a img e ai pallini la classe active
+			$('img, .nav i').removeClass('active');
+			// Calcolo l'index delle immagini
+			var indexImg = circleIndex + 1;
+			// Uso nth-child come selettore css (parte da 1) aggiungendo a img active corrispondente
+			$('img:nth-child(' + indexImg + ')').addClass('active');
+			// Aggiungo la classe active solo a this (ovvero al pallino cliccato)
+			$(this).addClass('active');
+		}
+	);
+
+	// uso delle frecce
+	$(document).keydown(
+		function (event) {
+			if (event.which === 39) {
+				nextImg();
+			} else if (event.which === 37) {
+				prevImg();
+			}
+		}
+	);
 });
 
+// Funzioni
 
-
-// funzione eseguita per girare immagini verso dx
-function clickNext () {
-	// salvo in una variabile l'immagine con classe active
+function nextImg () {
+	// seleziono l'elemento con  la classe active
 	var imgActive = $('img.active');
-	// rimuovo la classe per far sparire l'immagine attuale
+	// prendere imgActive e rimuovere la classe 'active'
 	imgActive.removeClass('active');
-	// ciclo if per capire in quale immagine sono, se sono nell'ultima foto farò apparire la prima dopo il click
-	if (imgActive.hasClass('last') === true) {
+	// seleziono i pallini
+	var circleActive = $('i.active');
+	circleActive.removeClass('active');
+
+	// quando sei all'ultimo torna indietro e uso la classe di appoggio 'last'
+	if (imgActive.hasClass('last')) {
 		var nextImg = $('img.first');
-	// altrimenti passo all'immagine successiva
-	}	else {
+		var nextCircle = $('i.first');
+	} else {
 		nextImg = imgActive.next();
+		nextCircle = circleActive.next();
 	}
-	// aggiungo la classe active e l'immagine compare
+	// devo applicarla all'elemento successivo - guarda la doc jQuery -> traversing
 	nextImg.addClass('active');
+	nextCircle.addClass('active');
 }
 
-// funzione eseguita per girare verso sx - vedi sopra
-function clickPrev () {
+function prevImg () {
 	var imgActive = $('img.active');
 	imgActive.removeClass('active');
-
+	var circleActive = $('i.active');
+	circleActive.removeClass('active');
 	if (imgActive.hasClass('first')) {
 		var nextImg = $('img.last');
-	}	else {
+		var nextCircle = $('i.last');
+	} else {
 		nextImg = imgActive.prev();
+		nextCircle = circleActive.prev();
 	}
-
 	nextImg.addClass('active');
+	nextCircle.addClass('active');
 }
-
-// freccia dx e sx
-
-$(document).keyup(function (e) {
-	if (e.keyCode === 37) {			// left
-		var imgActive = $('img.active');
-		imgActive.removeClass('active');
-		if (imgActive.hasClass('last') === true) {
-			var nextImg = $('img.first');
-		}	else {
-			nextImg = imgActive.next();
-		}
-		nextImg.addClass('active');
-	}
-}
-);
-
-$(document).keyup(function (e) {
-	if (e.keyCode === 39) {			// right
-		var imgActive = $('img.active');
-		imgActive.removeClass('active');
-
-		if (imgActive.hasClass('first')) {
-			var nextImg = $('img.last');
-		}	else {
-			nextImg = imgActive.prev();
-		}
-
-		nextImg.addClass('active');
-	}
-}
-);
